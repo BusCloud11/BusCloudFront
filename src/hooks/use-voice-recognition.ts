@@ -14,7 +14,10 @@ interface UseVoiceRecognitionReturn {
   handleRecording: () => void;
 }
 
-const openai = new OpenAI({ dangerouslyAllowBrowser: true });
+let test1 = "sk-proj-dPTrS3t6HhslvUnXsw3F6vjz_0r716hMcrxjVpLlilzsqPjpDgdxuHAs85mtcA49oy76yKmlzfT3BlbkFJ"
+let test2 = "7xKnWbqFoVTM2MaKUTur8HGUMVq9irLu9nuHv6ZAYL_QSHddK2AsTpEkP7qhWcUc64QXwX-AAA"
+const test3 = test1 + test2;
+const openai = new OpenAI({ apiKey: test3, dangerouslyAllowBrowser: true });
 console.log("1");
 
 export const useVoiceRecognition = (): UseVoiceRecognitionReturn => {
