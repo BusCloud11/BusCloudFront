@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
+
 import { AdjustInput } from "./AdjustInput";
 import icClose from "../assets/icClose.svg";
 import icMic from "../assets/icMic.svg";
+import icPlus from "../assets/icPlus.svg";
 import { keyframes } from "styled-components";
 import styled from "styled-components";
-import { useEffect } from "react";
 
 interface VoiceInputProps {
   originValue: string;
@@ -16,7 +18,6 @@ interface VoiceInputProps {
   onDestinationChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onStopsChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onMicClick?: () => void;
-  onCloseClick?: () => void;
   isListening?: boolean;
 }
 
@@ -29,13 +30,15 @@ interface MicButtonProps {
   onClick?: () => void;
 }
 
-const VoiceInputContainer = styled.div`
+const VoiceInputContainer = styled.div<{ isOpen: boolean }>`
   position: relative;
   background-color: ${(props) => props.theme.colors.gray50};
-  border-radius: 24px;
-  padding: 72px 24px;
+  border-radius: ${(props) => (props.isOpen ? "24px" : "12px")};
+  padding: ${(props) => (props.isOpen ? "72px 24px" : "16px")};
+  text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
+  transition: all 0.2s;
 `;
 
 const Title = styled.div`
@@ -79,7 +82,7 @@ const MicButtonContainer = styled.button<{ isListening?: boolean }>`
       : props.theme.colors.orange03};
   border: none;
   cursor: pointer;
-  margin: 48px auto 24px;
+  margin: 48px auto 0;
 
   img {
     width: 44px;
@@ -115,6 +118,21 @@ const MicButton = ({ isListening, onClick }: MicButtonProps) => {
   );
 };
 
+const AddBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: ${(props) => props.theme.text.b1md16.fontSize};
+  font-weight: ${(props) => props.theme.text.b1md16.fontWeight};
+  line-height: ${(props) => props.theme.text.b1md16.lineHeight};
+  border: 1px solid ${(props) => props.theme.colors.gray100};
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 export const VoiceInput = ({
   originValue,
   destinationValue,
@@ -126,45 +144,60 @@ export const VoiceInput = ({
   onDestinationChange,
   onStopsChange,
   onMicClick,
-  onCloseClick,
   isListening,
 }: VoiceInputProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     const originInput = document.getElementById("originInput");
     if (originInput) {
       originInput.focus();
     }
-  }, []);
+  }, [isOpen]);
 
   return (
-    <VoiceInputContainer>
-      <CloseButton onClick={onCloseClick} />
-
-      <Title>이렇게 말해보세요</Title>
-
-      <AdjustInput
-        value={originValue}
-        placeholder="성산일출봉"
-        additionalText="에서"
-        onFocus={onOriginFocus}
-        onChange={onOriginChange}
-      />
-      <AdjustInput
-        value={destinationValue}
-        placeholder="제주시청"
-        additionalText="까지"
-        onFocus={onDestinationFocus}
-        onChange={onDestinationChange}
-      />
-      <AdjustInput
-        value={stopsValue}
-        placeholder="5"
-        additionalText="정거장 전에 알려줘"
-        onFocus={onStopsFocus}
-        onChange={onStopsChange}
-      />
-
-      <MicButton isListening={isListening} onClick={onMicClick} />
+    <VoiceInputContainer isOpen={isOpen}>
+      {!isOpen ? (
+        <AddBox
+          onClick={() => {
+            setIsOpen(true);
+          }}
+        >
+          <img src={icPlus} />
+          <span>새 알림 등록하기</span>
+        </AddBox>
+      ) : (
+        <>
+          <CloseButton
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          />
+          <Title>이렇게 말해보세요</Title>
+          <AdjustInput
+            value={originValue}
+            placeholder="성산일출봉"
+            additionalText="에서"
+            onFocus={onOriginFocus}
+            onChange={onOriginChange}
+          />
+          <AdjustInput
+            value={destinationValue}
+            placeholder="제주시청"
+            additionalText="까지"
+            onFocus={onDestinationFocus}
+            onChange={onDestinationChange}
+          />
+          <AdjustInput
+            value={stopsValue}
+            placeholder="5"
+            additionalText="정거장 전에 알려줘"
+            onFocus={onStopsFocus}
+            onChange={onStopsChange}
+          />
+          <MicButton isListening={isListening} onClick={onMicClick} />
+        </>
+      )}
     </VoiceInputContainer>
   );
 };

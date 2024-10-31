@@ -1,87 +1,31 @@
-import Button from "../components/Button";
-import Card from "../components/Card";
-import Checkbox from "../components/CheckBox";
-import Switch from "../components/Switch";
-import TextInput from "../components/TextInput";
 import VoiceInput from "../components/VoiceInput";
-import { counterState } from "../atoms";
-import { useRecoilState } from "recoil";
 import { useState } from "react";
 
 const Home = () => {
-  const [count, setCount] = useRecoilState(counterState);
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
-
-  const increment = () => setCount(count + 1);
-  const decrement = () => setCount(count - 1);
+  const [stops, setStops] = useState("3");
 
   return (
-    <>
-      <div>Home</div>
-      <div>
-        <h2>카운터</h2>
-        <p>{count}</p>
-        <div>
-          <button onClick={decrement}>-</button>
-          <button onClick={increment}>+</button>
-        </div>
-      </div>
-      <Button size="large">버튼</Button>
-      <hr />
-      <TextInput label="출발지" value="인풋내용" />
-      <hr />
-      <Switch selected={count % 2 == 0} onToggle={() => {}} />
-      <hr />
-      <Checkbox checked={count % 2 == 0} onToggle={() => {}} />
-      <hr />
-      <Card
-        title="목적지"
-        departure="제주공항"
-        destination="제주시청"
-        buses={[
-          {
-            busNumber: "100",
-            color: "red",
-            stops: 3,
-          },
-          {
-            busNumber: "101",
-            color: "green",
-            stops: 5,
-          },
-        ]}
-        isAlertEnabled={true}
-      />
-      <Card
-        title="목적지"
-        departure="제주공항"
-        destination="제주시청"
-        alertTime="12:00 ~ 15:00"
-        alertStop={3}
-        isAlertEnabled={true}
-        onToggleAlert={() => {}}
-        onDeleteAlert={() => {}}
-      />
-      <VoiceInput
-        originValue={origin}
-        destinationValue={destination}
-        stopsValue="3"
-        onOriginFocus={() => {}}
-        onDestinationFocus={() => {}}
-        onStopsFocus={() => {}}
-        onOriginChange={(e) => {
-          setOrigin(e.target.value);
-        }}
-        onDestinationChange={(e) => {
-          setDestination(e.target.value);
-        }}
-        onStopsChange={() => {}}
-        onMicClick={() => {}}
-        onCloseClick={() => {}}
-        isListening={false}
-      />
-    </>
+    <VoiceInput
+      originValue={origin}
+      destinationValue={destination}
+      stopsValue={stops}
+      onOriginFocus={() => {}}
+      onDestinationFocus={() => {}}
+      onStopsFocus={() => {}}
+      onOriginChange={(e) => {
+        setOrigin(e.target.value);
+      }}
+      onDestinationChange={(e) => {
+        setDestination(e.target.value);
+      }}
+      onStopsChange={(e) => {
+        setStops(e.target.value);
+      }}
+      onMicClick={() => {}}
+      isListening={false}
+    />
   );
 };
 
