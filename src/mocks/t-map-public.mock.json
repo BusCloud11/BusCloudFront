@@ -1,0 +1,315 @@
+{
+  "metaData": {
+    "plan": {
+      "itineraries": [
+        {
+          "fare": {
+            "regular": {
+              "currency": {
+                "symbol": "￦",
+                "currency": "원",
+                "currencyCode": "KRW"
+              },
+              "totalFare": 2000
+            }
+          },
+          "legs": [
+            {
+              "mode": "WALK",
+              "sectionTime": 93,
+              "distance": 86,
+              "start": {
+                "name": "출발지",
+                "lat": 33.5070772,
+                "lon": 126.4934311
+              },
+              "end": {
+                "name": "제주국제공항1(표선.성산.남원)",
+                "lat": 33.50662777777778,
+                "lon": 126.49381666666666
+              },
+              "steps": [
+                {
+                  "streetName": "보행자도로",
+                  "distance": 54,
+                  "description": "보행자도로 을 따라 54m 이동",
+                  "linestring": "126.49344,33.506718 126.49406,33.506733"
+                },
+                {
+                  "streetName": "",
+                  "distance": 11,
+                  "description": "우측 횡단보도 후 11m 이동 ",
+                  "linestring": "126.49406,33.506733 126.49406,33.506634"
+                },
+                {
+                  "streetName": "보행자도로",
+                  "distance": 21,
+                  "description": "우회전 후 보행자도로 을 따라 21m 이동 ",
+                  "linestring": "126.49406,33.506634 126.49382,33.506622 126.49381,33.506622"
+                }
+              ]
+            },
+            {
+              "mode": "BUS",
+              "sectionTime": 2673,
+              "distance": 17447,
+              "start": {
+                "name": "대천환승정류장(세화방향)",
+                "lat": 33.43621111111111,
+                "lon": 126.73706666666666
+              },
+              "end": {
+                "name": "고성리제주은행",
+                "lat": 33.44891944444444,
+                "lon": 126.91548333333333
+              },
+              "route": "간선:211",
+              "routeColor": "0068B7",
+              "routeId": "18167001",
+              "passShape": {
+                "linestring": "126.737058,33.436247 126.737428,33.436403 126.740269,33.437400 126.743567,33.438564 126.744878,33.439025 126.745467,33.439269 126.749489,33.441119 126.750000,33.441342 126.752394,33.442383"
+              },
+              "passStopList": {
+                "stationList": [
+                  {
+                    "index": 0,
+                    "stationID": "602085",
+                    "stationName": "대천환승정류장(세화방향)",
+                    "lat": "33.436211",
+                    "lon": "126.737067"
+                  },
+                  {
+                    "index": 1,
+                    "stationID": "602192",
+                    "stationName": "거슨새미오름. 안돌오름",
+                    "lat": "33.445175",
+                    "lon": "126.757144"
+                  },
+                  {
+                    "index": 2,
+                    "stationID": "602244",
+                    "stationName": "금백조로입구",
+                    "lat": "33.447564",
+                    "lon": "126.764711"
+                  },
+                  {
+                    "index": 20,
+                    "stationID": "602255",
+                    "stationName": "고성리제주은행",
+                    "lat": "33.448919",
+                    "lon": "126.915483"
+                  }
+                ]
+              }
+            },
+            {
+              "mode": "WALK",
+              "sectionTime": 256,
+              "distance": 319,
+              "start": {
+                "name": "고성리제주은행",
+                "lat": 33.44891944444444,
+                "lon": 126.91548333333333
+              },
+              "end": {
+                "name": "도착지",
+                "lat": 33.4500452,
+                "lon": 126.9184399
+              },
+              "steps": [
+                {
+                  "streetName": "동류암로",
+                  "distance": 81,
+                  "description": "동류암로 을 따라 81m 이동",
+                  "linestring": "126.915535,33.448997 126.91574,33.448895 126.91614,33.448708 126.9162,33.448685 126.91634,33.448658"
+                },
+                {
+                  "streetName": "동류암로",
+                  "distance": 169,
+                  "description": "10시 방향 좌회전 후 동류암로 을 따라 169m 이동 ",
+                  "linestring": "126.91634,33.448658 126.91673,33.448963 126.91689,33.449066"
+                }
+              ]
+            }
+          ],
+          "totalDistance": 45351,
+          "totalTime": 6286,
+          "totalWalkDistance": 618,
+          "totalWalkTime": 568,
+          "transferCount": 0
+        },
+        {
+          "fare": {
+            "regular": {
+              "currency": {
+                "symbol": "￦",
+                "currency": "원",
+                "currencyCode": "KRW"
+              },
+              "totalFare": 2500
+            }
+          },
+          "legs": [
+            {
+              "mode": "WALK",
+              "sectionTime": 120,
+              "distance": 100,
+              "start": {
+                "name": "출발지",
+                "lat": 33.5070772,
+                "lon": 126.4934311
+              },
+              "end": {
+                "name": "버스정류장",
+                "lat": 33.5072772,
+                "lon": 126.4936311
+              },
+              "steps": [
+                {
+                  "streetName": "보행자도로",
+                  "distance": 100,
+                  "description": "보행자도로를 따라 100m 이동",
+                  "linestring": "126.49344,33.506718 126.49364,33.507118"
+                }
+              ]
+            },
+            {
+              "mode": "BUS",
+              "sectionTime": 1800,
+              "distance": 15000,
+              "start": {
+                "name": "버스정류장",
+                "lat": 33.5072772,
+                "lon": 126.4936311
+              },
+              "end": {
+                "name": "중간정류장",
+                "lat": 33.5172772,
+                "lon": 126.5336311
+              },
+              "route": "간선:100",
+              "routeColor": "FF0000",
+              "routeId": "12345001",
+              "passShape": {
+                "linestring": "126.49344,33.506718 126.50344,33.516718 126.51344,33.526718"
+              },
+              "passStopList": {
+                "stationList": [
+                  {
+                    "index": 0,
+                    "stationID": "602101",
+                    "stationName": "버스정류장",
+                    "lat": "33.5072772",
+                    "lon": "126.4936311"
+                  },
+                  {
+                    "index": 1,
+                    "stationID": "602102",
+                    "stationName": "중간정류장1",
+                    "lat": "33.5076772",
+                    "lon": "126.5036311"
+                  },
+                  {
+                    "index": 2,
+                    "stationID": "602103",
+                    "stationName": "중간정류장2",
+                    "lat": "33.5078772",
+                    "lon": "126.5136311"
+                  },
+                  {
+                    "index": 3,
+                    "stationID": "602104",
+                    "stationName": "중간정류장",
+                    "lat": "33.5172772",
+                    "lon": "126.5336311"
+                  }
+                ]
+              }
+            },
+            {
+              "mode": "SUBWAY",
+              "sectionTime": 2400,
+              "distance": 20000,
+              "start": {
+                "name": "중간정류장",
+                "lat": 33.5172772,
+                "lon": 126.5336311
+              },
+              "end": {
+                "name": "지하철역",
+                "lat": 33.5272772,
+                "lon": 126.5636311
+              },
+              "route": "노선:2호선",
+              "routeColor": "00FF00",
+              "routeId": "23456001",
+              "passShape": {
+                "linestring": "126.53344,33.516718 126.54344,33.526718 126.55344,33.536718"
+              },
+              "passStopList": {
+                "stationList": [
+                  {
+                    "index": 0,
+                    "stationID": "603201",
+                    "stationName": "중간정류장",
+                    "lat": "33.5172772",
+                    "lon": "126.5336311"
+                  },
+                  {
+                    "index": 1,
+                    "stationID": "603202",
+                    "stationName": "지하철역1",
+                    "lat": "33.5178772",
+                    "lon": "126.5436311"
+                  },
+                  {
+                    "index": 2,
+                    "stationID": "603203",
+                    "stationName": "지하철역",
+                    "lat": "33.5272772",
+                    "lon": "126.5636311"
+                  }
+                ]
+              }
+            },
+            {
+              "mode": "WALK",
+              "sectionTime": 180,
+              "distance": 150,
+              "start": {
+                "name": "지하철역",
+                "lat": 33.5272772,
+                "lon": 126.5636311
+              },
+              "end": {
+                "name": "도착지",
+                "lat": 33.5282772,
+                "lon": 126.5646311
+              },
+              "steps": [
+                {
+                  "streetName": "출구",
+                  "distance": 50,
+                  "description": "출구를 따라 50m 이동",
+                  "linestring": "126.5636311,33.5272772 126.5641311,33.5276772"
+                },
+                {
+                  "streetName": "보행자도로",
+                  "distance": 100,
+                  "description": "보행자도로를 따라 100m 이동",
+                  "linestring": "126.5641311,33.5276772 126.5646311,33.5282772"
+                }
+              ]
+            }
+          ],
+          "totalDistance": 35250,
+          "totalTime": 4500,
+          "totalWalkDistance": 370,
+          "totalWalkTime": 300,
+          "transferCount": 2
+        }
+      ]
+    }
+
+  }
+}
