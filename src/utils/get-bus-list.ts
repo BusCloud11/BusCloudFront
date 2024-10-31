@@ -1,14 +1,14 @@
 import { AxiosError } from "axios"
 import axiosInstanceToBack from "../axios-instance"
 
-type GetBusListResponseType = {
+export type GetBusListResponseType = {
   id: number,
   departure: string,
   destination: string,
   station: number,
   time: string,
   alarm: boolean,
-  favorite: false,
+  favorite: boolean,
   notionId: number,
   stationId: number,
   frequency: number

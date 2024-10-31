@@ -1,9 +1,11 @@
 import { AxiosError } from "axios"
 import axiosInstanceToBack from "../axios-instance"
 
-export const postBusAlarm = async () => {
+export const postBusAlarm = async (id: number, alarm: boolean) => {
   try {
-    await axiosInstanceToBack().post('/api/bus/alarm')
+    await axiosInstanceToBack().post('/api/bus/alarm', {
+      id, alarm
+    })
   }
   catch (e) {
     if (e instanceof Error || e instanceof AxiosError)
