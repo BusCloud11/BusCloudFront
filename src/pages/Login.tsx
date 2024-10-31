@@ -1,10 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
 
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import icDropDown from "../assets/icDropDown.svg";
 import Button from "../components/Button";
 import Checkbox from "../components/CheckBox";
 import TextInput from "../components/TextInput";
-import icDropDown from "../assets/icDropDown.svg";
-import styled from "styled-components";
+import { postMemberLogin } from "../utils/post-member-login";
 
 const Container = styled.div`
   display: flex;
@@ -46,6 +48,7 @@ const Login = () => {
   const [isCheck1, setIsCheck1] = useState(false);
   const [isCheck2, setIsCheck2] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
+  const navigate = useNavigate()
 
   useEffect(() => {
     setBtnDisabled(!isValidPhoneNumber(phone) || !isCheck1 || !isCheck2);
@@ -78,15 +81,15 @@ const Login = () => {
       setError("올바른 전화번호 형식이 아닙니다");
       return;
     }
-    // const response = await axios.post("/api/member/login", {
-    //   phone,
-    // });
-
-    // if (response.status === 200) {
-    //   localStorage.setItem("phone", phone);
-    //   alert("인증번호가 발송되었습니다.");
-    // }
-    console.log("phone", phone);
+    
+    try {
+      const token = await postMemberLogin(phone)
+      localStorage.setItem('accessToken', token)
+      localStorage.setItem('phone', phone)
+      navigate('/home')
+    } catch {
+      alert("로그인에 실패했습니다.")
+    }
   };
 
   return (

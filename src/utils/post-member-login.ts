@@ -6,16 +6,7 @@ export const postMemberLogin = async (phone: string) => {
     const response = await axiosInstanceToBack().post('/api/member/login', {
       phone
     })
-    
-    if (response.data.success) { 
-      const token = response.data.result.data.token
-      if (token) {
-        localStorage.setItem('accessToken', token)
-        localStorage.setItem('phone', phone)
-      }
-    }
-
-    return response.data
+    return response.data.result.data
   } catch (e) {
     if (e instanceof Error || e instanceof AxiosError)
       throw e
