@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+
 import Card from "../components/Card";
 import { GetBusListResponseType } from "../utils/get-bus-list";
 import { postBusAlarm } from "../utils/post-bus-alarm";
 import { postBusFavorite } from "../utils/post-bus-favorite";
+import styled from "styled-components";
 
 const Container = styled.div`
   padding: 20px;
@@ -38,27 +39,28 @@ const mockDatas: GetBusListResponseType[] = [
     notionId: 1,
     stationId: 1,
     frequency: 1,
-  }
-]
+  },
+];
 
 const Favorite = () => {
-  const [busList, setBusList] = useState<GetBusListResponseType[]>([])
+  const [busList, setBusList] = useState<GetBusListResponseType[]>([]);
 
-  const getBusss = async () => { 
-    // const data = await getBusList()
-    const data = mockDatas
-    setBusList(data)
-  }
-  useEffect(() => { 
+  const getBusss = async () => {
+    const data = await getBusList();
+    // const data = mockDatas
+    setBusList(data);
+  };
+  useEffect(() => {
     getBusss();
-  },[])
+  }, []);
 
   return (
     <Container>
       <H1>즐겨찾는 노선</H1>
       <CardWrapper>
         {busList.map((item) => (
-          <Card key={item.id}
+          <Card
+            key={item.id}
             title={item.departure}
             departure={item.departure}
             destination={item.destination}
@@ -66,10 +68,10 @@ const Favorite = () => {
             alertStop={item.station}
             isAlertEnabled={item.alarm}
             onToggleAlert={() => {
-              postBusAlarm(item.id, !item.alarm)
+              postBusAlarm(item.id, !item.alarm);
             }}
             onDeleteAlert={() => {
-              postBusFavorite({id: item.id, favorite: false})
+              postBusFavorite({ id: item.id, favorite: false });
             }}
           />
         ))}
