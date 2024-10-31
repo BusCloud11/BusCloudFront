@@ -5,6 +5,7 @@ import icHomeGray from "../assets/icHomeGray.svg";
 import icStarActive from "../assets/icStarActive.svg";
 import icStarGray from "../assets/icStarGray.svg";
 import styled from "styled-components";
+import { useEffect } from "react";
 
 const Nav = styled.nav`
   position: fixed;
@@ -56,6 +57,13 @@ const NavItem = styled.li<{ active: boolean }>`
 const Navigation = () => {
   const location = useLocation();
   const isHome = location.pathname === "/home";
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("phone") !== null;
+    if (!isLoggedIn) {
+      window.location.href = "/";
+    }
+  }, []);
 
   return (
     <Nav>
