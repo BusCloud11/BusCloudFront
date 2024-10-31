@@ -102,6 +102,9 @@ export async function getBusRoute(startXY: GeoXYType, endXY: GeoXYType) {
   const test2 = "q8xYAIm3GS216Szb7lYid";
   const test3 = test1 + test2;
 
+  console.log(startXY, endXY);
+  return;
+
   /** 실제 api 호출 */
   const response = await axios.post(
     `https://apis.openapi.sk.com/transit/routes`,

@@ -73,7 +73,7 @@ const mockDatas: GetBusListResponseType[] = [
     alarm: true,
     favorite: true,
     notionId: 1,
-    stationId: 1,
+    stationId: 1405000155,
     frequency: 1,
   },
 ];
@@ -126,7 +126,7 @@ const Home = () => {
       const routeId = busList[0].notionId;
       try {
         const response = await axios.get(
-          "/api/jeju-bus/api/searchArrivalInfoList.do",
+          "http://bus.jeju.go.kr/api/searchArrivalInfoList.do",
           {
             params: {
               station_id: stationId,
@@ -222,9 +222,6 @@ const Home = () => {
       />
       <H1>예정된 알림</H1>
       <CardWrapper>
-        {/* {data.slice(2, 0).map((item) => (
-          <Card key={item.title} {...item} />
-        ))} */}
         {busList.length > 0 && (
           <Card
             title={busList[0].departure}
@@ -233,11 +230,26 @@ const Home = () => {
             buses={[
               {
                 busNumber: busInfo.plateNumber,
-                color: "#FF0000",
+                color: "#386DE8",
                 stops: busInfo.remainStation,
               },
             ]}
             isAlertEnabled={busList[0].alarm}
+          />
+        )}
+        {busList.length > 1 && (
+          <Card
+            title={busList[1].departure}
+            departure={busList[1].departure}
+            destination={busList[1].destination}
+            buses={[
+              {
+                busNumber: busInfo.plateNumber,
+                color: "#386DE8",
+                stops: busInfo.remainStation,
+              },
+            ]}
+            isAlertEnabled={busList[1].alarm}
           />
         )}
       </CardWrapper>

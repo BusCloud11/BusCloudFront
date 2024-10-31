@@ -6,7 +6,10 @@ type GeoXYType = {
 };
 
 /** 위/경도 가까운 정류소 찾기 */
-export async function transAddressToXY(address: string): Promise<GeoXYType> {
+export async function transAddressToXY(
+  address: string,
+  isTest?: boolean
+): Promise<GeoXYType> {
   const test1 = "AIzaSyCQMwISsLo";
   const test2 = "R2dJxe9nhLl9";
   const test3 = test1 + test2;
@@ -30,7 +33,9 @@ export async function transAddressToXY(address: string): Promise<GeoXYType> {
   } catch (e) {
     console.error("OpenStreetMap API 요청 실패");
     console.error(e);
-
-    return { x: -1, y: -1 };
+    if (isTest) {
+      return { x: 126.4934, y: 33.5071 };
+    }
+    return { x: 126.528244, y: 33.512253 };
   }
 }
