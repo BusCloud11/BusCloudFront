@@ -10,7 +10,7 @@ import styled from "styled-components";
 const AppContainer = styled.div`
   position: relative;
   width: 390px;
-  margin: 0 auto;
+  margin: 0 auto 60px auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: white;
   min-height: 100vh;
