@@ -10,8 +10,8 @@ export async function transAddressToXY(
   address: string,
   isTest?: boolean
 ): Promise<GeoXYType> {
-  const test1 = "AIzaSyCQMwISsLo";
-  const test2 = "R2dJxe9nhLl9";
+  const test1 = "AIzaSyD_1xj3GyH4h174";
+  const test2 = "VgfBY9FSg_NBRCVJ3L0";
   const test3 = test1 + test2;
 
   try {
