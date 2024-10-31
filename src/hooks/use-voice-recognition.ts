@@ -15,6 +15,7 @@ interface UseVoiceRecognitionReturn {
 }
 
 const openai = new OpenAI({ dangerouslyAllowBrowser: true });
+console.log("1");
 
 export const useVoiceRecognition = (): UseVoiceRecognitionReturn => {
   const [isRecording, setIsRecording] = useState(false);
