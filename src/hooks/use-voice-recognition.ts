@@ -15,6 +15,7 @@ interface UseVoiceRecognitionReturn {
 }
 
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+console.log(apiKey);
 const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
 
 export const useVoiceRecognition = (): UseVoiceRecognitionReturn => {
