@@ -50,6 +50,11 @@ const Login = () => {
   const [btnDisabled, setBtnDisabled] = useState(true);
   const navigate = useNavigate()
 
+  useEffect(() => { 
+    const phone = localStorage.getItem('phone')
+    if (phone !== null) navigate('/home');
+  },[navigate])
+
   useEffect(() => {
     setBtnDisabled(!isValidPhoneNumber(phone) || !isCheck1 || !isCheck2);
   }, [phone, isCheck1, isCheck2]);
@@ -81,11 +86,11 @@ const Login = () => {
       setError("올바른 전화번호 형식이 아닙니다");
       return;
     }
-    
+    const parsedPhone = phone.replace(/-/g, "")
     try {
-      const token = await postMemberLogin(phone)
+      const token = await postMemberLogin(parsedPhone)
       localStorage.setItem('accessToken', token)
-      localStorage.setItem('phone', phone)
+      localStorage.setItem('phone', parsedPhone)
       navigate('/home')
     } catch {
       alert("로그인에 실패했습니다.")
