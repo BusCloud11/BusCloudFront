@@ -1,140 +1,132 @@
-import axios from "axios";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+
+import Button from "../components/Button";
+import Checkbox from "../components/CheckBox";
+import TextInput from "../components/TextInput";
+import icDropDown from "../assets/icDropDown.svg";
 import styled from "styled-components";
-import VoiceTest from "../VoiceTest";
 
 const Container = styled.div`
-  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-`;
-
-const PhoneForm = styled.form`
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const Label = styled.label`
-  font-size: 16px;
-  color: ${({ theme }) => theme.colors.gray950};
-  font-weight: 500;
-`;
-
-const PhoneInput = styled.input`
-  width: 100%;
-  height: 48px;
+  height: 100vh;
   padding: 0 16px;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.gray400};
-  font-size: 16px;
-  
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.gray500};
-  }
-  
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.gray500};
-  }
+  gap: 32px;
 `;
 
-const SubmitButton = styled.button`
+const Logo = styled.div`
+  width: 289px;
+  height: 213px;
+  margin-top: 65px;
+  margin-bottom: 40px;
+  background-color: #353535;
+`;
+
+const CheckArea = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
-  height: 48px;
-  background-color: ${({ theme }) => theme.colors.gray950};
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  
-  &:disabled {
-    background-color: ${({ theme }) => theme.colors.gray400};
-    cursor: not-allowed;
-  }
-`;
+  gap: 12px;
+  font-size: ${(props) => props.theme.text.t1md20.fontSize};
+  font-weight: ${(props) => props.theme.text.t1md20.fontWeight};
+  line-height: ${(props) => props.theme.text.t1md20.lineHeight};
 
-const ErrorMessage = styled.p`
-  color: #ff4444;
-  font-size: 14px;
-  margin: 4px 0 0;
+  & > img {
+    position: absolute;
+    right: 8px;
+  }
 `;
 
 const Login = () => {
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
+  const [isCheck1, setIsCheck1] = useState(false);
+  const [isCheck2, setIsCheck2] = useState(false);
+  const [btnDisabled, setBtnDisabled] = useState(true);
 
-  
+  useEffect(() => {
+    setBtnDisabled(!isValidPhoneNumber(phone) || !isCheck1 || !isCheck2);
+  }, [phone, isCheck1, isCheck2]);
 
-  // 전화번호 형식 검증
-  const isValidPhoneNumber = (phone: string) => {
-    const regex = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
-    return regex.test(phone.replace(/-/g, ""));
+  const isValidPhoneNumber = (phoneNumber: string) => {
+    const regex = /^01([0|1|6|7|8|9])-?([0-9]{4})-?([0-9]{4})$/;
+    return regex.test(phoneNumber.replace(/-/g, ""));
   };
 
-  // 하이픈 자동 추가
   const formatPhoneNumber = (value: string) => {
     const numbers = value.replace(/[^\d]/g, "");
     if (numbers.length <= 3) return numbers;
-    if (numbers.length <= 7) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
-    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+    if (numbers.length <= 7)
+      return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(
+      7,
+      11
+    )}`;
   };
 
   const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const formattedNumber = formatPhoneNumber(value);
-    setPhoneNumber(formattedNumber);
-    
-    if (value && !isValidPhoneNumber(formattedNumber)) {
-      setError("올바른 전화번호 형식이 아닙니다");
-    } else {
-      setError("");
-    }
+    setPhone(formattedNumber);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isValidPhoneNumber(phoneNumber)) {
-      setError("올바른 전화번호를 입력해주세요");
+  const handleSubmit = async () => {
+    if (phone && !isValidPhoneNumber(phone)) {
+      setError("올바른 전화번호 형식이 아닙니다");
       return;
     }
-    const response = await axios.post("/api/member/login", {
-      phone: phoneNumber
-    })
+    // const response = await axios.post("/api/member/login", {
+    //   phone,
+    // });
 
-    if(response.status === 200) {
-      localStorage.setItem("phone", phoneNumber)
-      alert("인증번호가 발송되었습니다.")
-    }
+    // if (response.status === 200) {
+    //   localStorage.setItem("phone", phone);
+    //   alert("인증번호가 발송되었습니다.");
+    // }
+    console.log("phone", phone);
   };
 
   return (
     <Container>
-      <PhoneForm onSubmit={handleSubmit}>
-        <Label htmlFor="phone">전화번호</Label>
-        <PhoneInput
-          id="phone"
-          type="tel"
-          value={phoneNumber}
-          onChange={handlePhoneChange}
-          placeholder="전화번호를 입력해주세요"
-          maxLength={13}
+      <Logo />
+      <TextInput
+        label="휴대폰 로그인"
+        value={phone}
+        placeholder="010-1234-5678"
+        type="tel"
+        onChange={handlePhoneChange}
+        onClear={() => {
+          setPhone("");
+        }}
+        error={!!error}
+        helperText={error}
+      />
+      <CheckArea>
+        <Checkbox
+          checked={isCheck1}
+          onToggle={() => {
+            setIsCheck1((prev) => !prev);
+          }}
         />
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <SubmitButton 
-          type="submit" 
-          disabled={!phoneNumber || !!error}
-        >
-          확인
-        </SubmitButton>
-      </PhoneForm>
-
-      <VoiceTest />
+        <span>[필수] 개인정보 수집 및 이용에 동의</span>
+        <img src={icDropDown} />
+      </CheckArea>
+      <CheckArea>
+        <Checkbox
+          checked={isCheck2}
+          onToggle={() => {
+            setIsCheck2((prev) => !prev);
+          }}
+        />
+        <span>[필수] 서비스 악용 방지 및 처벌 동의</span>
+        <img src={icDropDown} />
+      </CheckArea>
+      <Button size="large" onClick={handleSubmit} disabled={btnDisabled}>
+        시작하기
+      </Button>
     </Container>
   );
 };

@@ -43,6 +43,10 @@ const Header = styled.div`
 
   font-size: ${(props) => props.theme.text.b2md22.fontSize};
   font-weight: ${(props) => props.theme.text.b2md22.fontWeight};
+
+  img {
+    cursor: pointer;
+  }
 `;
 
 const LocationInfo = styled.div`
