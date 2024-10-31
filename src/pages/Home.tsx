@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../components/Card";
@@ -76,12 +77,38 @@ const mockDatas: GetBusListResponseType[] = [
   }
 ]
 
+type BusInfoType = {
+  infoState: "notFound" | "error" | "normal",
+  routeNumber: string, // 노선 번호
+  predictionTime: number,// 현재 정류장까지 도착 예정 시간 (분)
+  remainStation: number// 현재 정류장까지 남은 정류장 수
+  plateNumber: string // 버스 차량번호 (아래 달려 있는 판넬) 
+}
+
+const NOT_FOUND_BUS_INFO: BusInfoType = {
+  infoState: "notFound",
+  routeNumber: "-1",
+  predictionTime: 0,
+  remainStation: 0,
+  plateNumber: "-2"
+} as const
+
+const ERROR_BUS_INFO: BusInfoType = {
+  infoState: "error",
+  routeNumber: "-2",
+  predictionTime: 0,
+  remainStation: 0,
+  plateNumber: "-2"
+} as const
+
+
 const Home = () => {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [stops, setStops] = useState("");
   const { isRecording,  aiResponse, handleRecording } = useVoiceRecognition();
   const [busList, setBusList] = useState<GetBusListResponseType[]>([])
+  const [busInfo, setBusInfo] = useState<BusInfoType>(NOT_FOUND_BUS_INFO)
 
   const getBusss = async () => { 
     // const data = await getBusList()
@@ -92,6 +119,33 @@ const Home = () => {
   useEffect(() => { 
     getBusss();
   }, [])
+
+  useEffect(() => { 
+    const timer = setInterval(async () => { 
+      const stationId = busList[0].stationId
+      const routeId = busList[0].notionId
+      try {
+        const response = await axios.get('/api/jeju-bus/api/searchArrivalInfoList.do', {
+          params: {
+            station_id: stationId
+          }
+        })
+        const busInfos = response.data
+        if (busInfos.length === 0) {
+          setBusInfo(NOT_FOUND_BUS_INFO)
+          return
+        }
+        const targetBusInfos = busInfos.filter((busInfo: BusInfoType) => Number(busInfo.routeNumber) === routeId)
+        targetBusInfos.sort((aBus: BusInfoType, bBus: BusInfoType) => aBus.predictionTime - bBus.predictionTime)
+        const nearestBusInfo = targetBusInfos[0]
+        setBusInfo({ ...nearestBusInfo, type: "normal" })
+      } catch{
+        setBusInfo(ERROR_BUS_INFO)
+      }
+
+    }, 10 * 1000)
+    return () => clearInterval(timer)
+  },[busList])
   
   useEffect(() => {
     if (!aiResponse) return;
@@ -146,7 +200,9 @@ const Home = () => {
           const notionId = busRoute.routeNum
           const time = getCurTime()
           try {
-            return await postBusSave({departure, destination, station, stationId, notionId, time}) 
+            const res = await postBusSave({ departure, destination, station, stationId, notionId, time }) 
+            await getBusss()
+            return res;
           }
           catch {
             return null;
@@ -156,9 +212,16 @@ const Home = () => {
       />
       <H1>예정된 알림</H1>
       <CardWrapper>
-        {data.slice(2, 0).map((item) => (
+        {/* {data.slice(2, 0).map((item) => (
           <Card key={item.title} {...item} />
-        ))}
+        ))} */}
+        {
+          busList.length > 0 &&
+        <Card title={busList[0].departure} departure={busList[0].departure} destination={busList[0].destination}
+          buses={[{ busNumber: busInfo.plateNumber, color: "#FF0000", stops: busInfo.remainStation }]}
+          isAlertEnabled={busList[0].alarm}
+          />
+        }
       </CardWrapper>
     </Container>
   );
