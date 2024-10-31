@@ -1,5 +1,9 @@
-import Card from "../components/Card";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import Card from "../components/Card";
+import { GetBusListResponseType } from "../utils/get-bus-list";
+import { postBusAlarm } from "../utils/post-bus-alarm";
+import { postBusFavorite } from "../utils/post-bus-favorite";
 
 const Container = styled.div`
   padding: 20px;
@@ -22,58 +26,52 @@ const CardWrapper = styled.div`
   gap: 32px;
 `;
 
-const data = [
+const mockDatas: GetBusListResponseType[] = [
   {
-    title: "납읍리 섯잣길[동] 정류장1",
+    id: 1,
     departure: "납읍초등학교",
     destination: "제주 시청",
-    alertTime: "12:00 ~ 15:00",
-    alertStop: 5,
-    isAlertEnabled: true,
-    onToggleAlert: () => {
-      console.log("toggle alert1");
-    },
-    onDeleteAlert: () => {
-      console.log("delete alert1");
-    },
-  },
-  {
-    title: "납읍리 섯잣길[동] 정류장2",
-    departure: "납읍초등학교",
-    destination: "제주 시청",
-    alertTime: "12:00 ~ 15:00",
-    alertStop: 5,
-    isAlertEnabled: false,
-    onToggleAlert: () => {
-      console.log("toggle alert2");
-    },
-    onDeleteAlert: () => {
-      console.log("delete alert2");
-    },
-  },
-  {
-    title: "납읍리 섯잣길[동] 정류장3",
-    departure: "납읍초등학교",
-    destination: "제주 시청",
-    alertTime: "12:00 ~ 15:00",
-    alertStop: 3,
-    isAlertEnabled: true,
-    onToggleAlert: () => {
-      console.log("toggle alert3");
-    },
-    onDeleteAlert: () => {
-      console.log("delete alert3");
-    },
-  },
-];
+    station: 5,
+    time: "12:00 ~ 15:00",
+    alarm: true,
+    favorite: true,
+    notionId: 1,
+    stationId: 1,
+    frequency: 1,
+  }
+]
 
 const Favorite = () => {
+  const [busList, setBusList] = useState<GetBusListResponseType[]>([])
+
+  const getBusss = async () => { 
+    // const data = await getBusList()
+    const data = mockDatas
+    setBusList(data)
+  }
+  useEffect(() => { 
+    getBusss();
+  },[])
+
   return (
     <Container>
       <H1>즐겨찾는 노선</H1>
       <CardWrapper>
-        {data.map((item) => (
-          <Card key={item.title} {...item} />
+        {busList.map((item) => (
+          <Card key={item.id}
+            title={item.departure}
+            departure={item.departure}
+            destination={item.destination}
+            alertTime={item.time}
+            alertStop={item.station}
+            isAlertEnabled={item.alarm}
+            onToggleAlert={() => {
+              postBusAlarm(item.id, !item.alarm)
+            }}
+            onDeleteAlert={() => {
+              postBusFavorite({id: item.id, favorite: false})
+            }}
+          />
         ))}
       </CardWrapper>
     </Container>

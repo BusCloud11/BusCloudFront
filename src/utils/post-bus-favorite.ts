@@ -3,7 +3,7 @@ import axiosInstanceToBack from "../axios-instance"
 
 type PostBusFavoriteRequestType = {
   id: number
-  favorite: boolean
+  favorite?: boolean
 }
 
 export const postBusFavorite = async ({ id, favorite = false }: PostBusFavoriteRequestType) => {
