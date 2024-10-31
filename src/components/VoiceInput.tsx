@@ -1,14 +1,14 @@
+import styled, { keyframes } from "styled-components";
 import { useEffect, useState } from "react";
 
-import styled, { keyframes } from "styled-components";
+import { AdjustInput } from "./AdjustInput";
+import Button from "../components/Button";
+import Checkbox from "./CheckBox";
+import { PostBusSaveResponseType } from "../utils/post-bus-save";
 import icClose from "../assets/icClose.svg";
 import icMic from "../assets/icMic.svg";
 import icPlus from "../assets/icPlus.svg";
-import Button from "../components/Button";
 import { postBusFavorite } from "../utils/post-bus-favorite";
-import { PostBusSaveResponseType } from "../utils/post-bus-save";
-import { AdjustInput } from "./AdjustInput";
-import Checkbox from "./CheckBox";
 
 interface VoiceInputProps {
   originValue: string;
@@ -82,10 +82,7 @@ const MicButtonContainer = styled.button<{ isListening?: boolean }>`
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background-color: ${(props) =>
-    props.isListening
-      ? props.theme.colors.redStrong
-      : props.theme.colors.orange03};
+  background-color: ${(props) => props.theme.colors.orange03};
   border: none;
   cursor: pointer;
   margin: 48px auto 40px auto;
@@ -96,30 +93,27 @@ const MicButtonContainer = styled.button<{ isListening?: boolean }>`
   }
 `;
 
-const pulse = keyframes`
-  0% {
-    background-color: red;
-  }
-  50% {
-    background-color: #f06c6c;
-  }
-  100% {
-    background-color: red;
-  }
+const loadingAnimation = keyframes`
+  0%     { background-position: calc(0 * 100% / 2) 50%, calc(1 * 100% / 2) 50%, calc(2 * 100% / 2) 50%; }
+  33.33% { background-position: calc(0 * 100% / 2) 0%, calc(1 * 100% / 2) 50%, calc(2 * 100% / 2) 50%; }
+  66.67% { background-position: calc(0 * 100% / 2) 50%, calc(1 * 100% / 2) 0%, calc(2 * 100% / 2) 50%; }
+  100%   { background-position: calc(0 * 100% / 2) 50%, calc(1 * 100% / 2) 50%, calc(2 * 100% / 2) 0%; }
 `;
 
-const RecordAnimation = styled.div`
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background-color: red;
-  animation: ${pulse} 2s infinite;
+const Loader = styled.div`
+  width: 80%;
+  height: 30px;
+  aspect-ratio: 2.5;
+  --_g: no-repeat radial-gradient(farthest-side, white 90%, #0000);
+  background: var(--_g), var(--_g), var(--_g);
+  background-size: 27% 50%;
+  animation: ${loadingAnimation} 1s infinite linear;
 `;
 
 const MicButton = ({ isListening, onClick }: MicButtonProps) => {
   return (
     <MicButtonContainer isListening={isListening} onClick={onClick}>
-      {isListening ? <RecordAnimation /> : <img src={icMic} alt="Mic" />}
+      {isListening ? <Loader /> : <img src={icMic} alt="Mic" />}
     </MicButtonContainer>
   );
 };
@@ -193,7 +187,9 @@ export const VoiceInput = ({
 }: VoiceInputProps) => {
   const [status, setStatus] = useState<StatusType>("closed");
   const [isFavorite, setIsFavorite] = useState(false);
-  const [response, setResponse] = useState<PostBusSaveResponseType | null>(null);
+  const [response, setResponse] = useState<PostBusSaveResponseType | null>(
+    null
+  );
 
   useEffect(() => {
     const originInput = document.getElementById("originInput");
@@ -244,10 +240,10 @@ export const VoiceInput = ({
           <Button
             size="large"
             variant="secondary"
-              onClick={async () => {
-                if (!response) return;
-                await postBusFavorite({id: response.id, favorite: isFavorite})
-                setStatus("closed");
+            onClick={async () => {
+              if (!response) return;
+              await postBusFavorite({ id: response.id, favorite: isFavorite });
+              setStatus("closed");
             }}
           >
             확인
