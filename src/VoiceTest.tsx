@@ -1,8 +1,8 @@
 import axios from "axios";
-import styled from "styled-components";
-import { useVoiceRecognition } from "./hooks/use-voice-recognition";
 import { getBusRoute } from "./utils/get-bus-route";
+import styled from "styled-components";
 import { transAddressToXY } from "./utils/trans-address-to-xy";
+import { useVoiceRecognition } from "./hooks/use-voice-recognition";
 
 const Container = styled.div`
   font-family: Arial, sans-serif;
@@ -45,60 +45,65 @@ const Input = styled.input`
 `;
 
 const VoiceTest = () => {
-  const { isRecording, recognizedText, aiResponse, handleRecording } = useVoiceRecognition();
+  const { isRecording, recognizedText, aiResponse, handleRecording } =
+    useVoiceRecognition();
 
   const onSubmit = async () => {
     if (!aiResponse) {
-      alert("AI 응답이 없었다.")
-      return
+      alert("AI 응답이 없었다.");
+      return;
     }
 
-    if (!aiResponse.stops) { 
-      alert("정류장 수가 없다.")
-      return
+    if (!aiResponse.stops) {
+      alert("정류장 수가 없다.");
+      return;
     }
-    if (!aiResponse.departures) { 
-      alert("출발지가 없다.")
-      return
+    if (!aiResponse.departures) {
+      alert("출발지가 없다.");
+      return;
     }
-    if (!aiResponse.destinations) { 
-      alert("도착지가 없다.")
-      return
+    if (!aiResponse.destinations) {
+      alert("도착지가 없다.");
+      return;
     }
-    const startXY = await transAddressToXY(aiResponse.departures)
-    const endXY = await transAddressToXY(aiResponse.destinations)
+    const startXY = await transAddressToXY(aiResponse.departures, true);
+    const endXY = await transAddressToXY(aiResponse.destinations);
 
-    const busRoute = await getBusRoute(startXY, endXY)
+    const busRoute = await getBusRoute(startXY, endXY);
 
-    const departure = aiResponse.departures
-    const destination = aiResponse.destinations
-    const station = aiResponse.stops
-    const stationId = busRoute?.sStationId
-    const notionId = busRoute?.routeNum.split(":")[1]
-    const time = getCurTime()
+    const departure = aiResponse.departures;
+    const destination = aiResponse.destinations;
+    const station = aiResponse.stops;
+    const stationId = busRoute?.sStationId;
+    const notionId = busRoute?.routeNum.split(":")[1];
+    const time = getCurTime();
 
-    const phone = localStorage.getItem("phone")
-    console.log(departure, destination, station, stationId, notionId, time)
-    const response = await axios.post("/api/bus/save",{
-      departure,
-      destination,
-      station,
-      stationId,
-      notionId,
-      time,
-    }, {
-      headers: {
-        "Authorization": `Bearer ${phone}`
+    const phone = localStorage.getItem("phone");
+    console.log(departure, destination, station, stationId, notionId, time);
+    const response = await axios.post(
+      "/api/bus/save",
+      {
+        departure,
+        destination,
+        station,
+        stationId,
+        notionId,
+        time,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${phone}`,
+        },
       }
-    })
+    );
 
     if (response.status === 200) {
-      alert("저장 완료")
-      console.log(response.data)
+      alert("저장 완료");
+      console.log(response.data);
     } else {
-      alert("저장 실패")
+      alert("저장 실패");
     }
-  }
+  };
 
   return (
     <Container>
@@ -119,24 +124,24 @@ const VoiceTest = () => {
       <br />
       <Input
         type="text"
-        value={aiResponse ? `출발지: ${aiResponse.departures}` : ''}
+        value={aiResponse ? `출발지: ${aiResponse.departures}` : ""}
         placeholder="AI가 추출한 정보 중 출발지"
         readOnly
       />
-       <Input
+      <Input
         type="text"
-        value={aiResponse ? `출발지: ${aiResponse.destinations}` : ''}
+        value={aiResponse ? `출발지: ${aiResponse.destinations}` : ""}
         placeholder="AI가 추출한 정보 중 도착지"
         readOnly
       />
       <Input
         type="text"
-        value={aiResponse ? `출발지: ${aiResponse.stops}` : '0'}
+        value={aiResponse ? `출발지: ${aiResponse.stops}` : "0"}
         placeholder="AI가 추출한 정보 중 정류장 수"
         readOnly
       />
 
-    <Button onClick={onSubmit} isRecording={isRecording}>
+      <Button onClick={onSubmit} isRecording={isRecording}>
         서버로 전송
       </Button>
     </Container>
@@ -146,9 +151,8 @@ const VoiceTest = () => {
 export default VoiceTest;
 
 const getCurTime = () => {
-  const now = Date.now()
-  const date = new Date(now)
-  const hours = date.getHours()
-  const minutes = date.getMinutes()
-  return `${hours}:${minutes}`
-}
+  const now = Date.now();
+  const hours = new Date(now).getHours().toString().padStart(2, "0");
+  const minutes = new Date(now).getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
