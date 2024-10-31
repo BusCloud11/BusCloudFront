@@ -9,7 +9,7 @@ type PostBusSaveRequestType = {
   notionId: string
   time: string
 }
-type PostBusSaveResponseType = {
+export type PostBusSaveResponseType = {
   id: number
   departure: string
   destination: string

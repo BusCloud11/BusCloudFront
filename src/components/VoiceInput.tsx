@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 
-import { AdjustInput } from "./AdjustInput";
-import Button from "../components/Button";
-import Checkbox from "./CheckBox";
+import styled, { keyframes } from "styled-components";
 import icClose from "../assets/icClose.svg";
 import icMic from "../assets/icMic.svg";
 import icPlus from "../assets/icPlus.svg";
-import { keyframes } from "styled-components";
-import styled from "styled-components";
+import Button from "../components/Button";
+import { postBusFavorite } from "../utils/post-bus-favorite";
+import { PostBusSaveResponseType } from "../utils/post-bus-save";
+import { AdjustInput } from "./AdjustInput";
+import Checkbox from "./CheckBox";
 
 interface VoiceInputProps {
   originValue: string;
@@ -21,7 +22,7 @@ interface VoiceInputProps {
   onStopsChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onMicClick?: () => void;
   onResetClick?: () => void;
-  onConfirmClick?: () => void;
+  onConfirmClick: () => Promise<PostBusSaveResponseType | null>;
   isListening?: boolean;
 }
 
@@ -192,6 +193,7 @@ export const VoiceInput = ({
 }: VoiceInputProps) => {
   const [status, setStatus] = useState<StatusType>("closed");
   const [isFavorite, setIsFavorite] = useState(false);
+  const [response, setResponse] = useState<PostBusSaveResponseType | null>(null);
 
   useEffect(() => {
     const originInput = document.getElementById("originInput");
@@ -200,9 +202,14 @@ export const VoiceInput = ({
     }
   }, [status]);
 
-  const onConfirm = () => {
-    setStatus("done");
-    onConfirmClick?.();
+  const onConfirm = async () => {
+    const res = await onConfirmClick();
+    if (!response) {
+      setStatus("error");
+    } else {
+      setResponse(res);
+      setStatus("done");
+    }
   };
 
   return (
@@ -237,8 +244,10 @@ export const VoiceInput = ({
           <Button
             size="large"
             variant="secondary"
-            onClick={() => {
-              setStatus("closed");
+              onClick={async () => {
+                if (!response) return;
+                await postBusFavorite({id: response.id, favorite: isFavorite})
+                setStatus("closed");
             }}
           >
             확인

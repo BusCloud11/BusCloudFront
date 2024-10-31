@@ -1,7 +1,12 @@
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 import Card from "../components/Card";
 import VoiceInput from "../components/VoiceInput";
-import styled from "styled-components";
-import { useState } from "react";
+import { useVoiceRecognition } from "../hooks/use-voice-recognition";
+import { GetBusListResponseType } from "../utils/get-bus-list";
+import { getBusRoute } from "../utils/get-bus-route";
+import { postBusSave } from "../utils/post-bus-save";
+import { transAddressToXY } from "../utils/trans-address-to-xy";
 
 const Container = styled.div`
   display: flex;
@@ -56,10 +61,48 @@ const data = [
   },
 ];
 
+const mockDatas: GetBusListResponseType[] = [
+  {
+    id: 1,
+    departure: "납읍초등학교",
+    destination: "제주 시청",
+    station: 5,
+    time: "12:00 ~ 15:00",
+    alarm: true,
+    favorite: true,
+    notionId: 1,
+    stationId: 1,
+    frequency: 1,
+  }
+]
+
 const Home = () => {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [stops, setStops] = useState("");
+  const { isRecording,  aiResponse, handleRecording } = useVoiceRecognition();
+  const [busList, setBusList] = useState<GetBusListResponseType[]>([])
+
+  const getBusss = async () => { 
+    // const data = await getBusList()
+    const data = mockDatas
+    setBusList(data)
+  }
+
+  useEffect(() => { 
+    getBusss();
+  }, [])
+  
+  useEffect(() => {
+    if (!aiResponse) return;
+    setOrigin(aiResponse.departures)
+    setDestination(aiResponse.destinations)
+    setStops(aiResponse.stops.toString())
+    console.log(aiResponse) 
+  }, [aiResponse])
+
+
+
 
   return (
     <Container>
@@ -76,8 +119,40 @@ const Home = () => {
         onStopsChange={(e) => {
           setStops(e.target.value);
         }}
-        onMicClick={() => {}}
-        isListening={false}
+        onMicClick={() => {
+          handleRecording()
+        }}
+        onResetClick={() => {
+          setOrigin("")
+          setDestination("")
+          setStops("")
+        }}
+        onConfirmClick={async () => {
+          // 1. 구글 api 호출
+          const startXY = await transAddressToXY(origin)
+          const endXY = await transAddressToXY(destination)
+
+          console.log(startXY, endXY)
+
+          // 2. tmap api 호출
+          const busRoute = await getBusRoute(startXY, endXY)
+          console.log(busRoute)
+
+          if (!busRoute) return null;
+
+          const departure = origin
+          const station = Number(stops)
+          const stationId = busRoute.sStationId
+          const notionId = busRoute.routeNum
+          const time = getCurTime()
+          try {
+            return await postBusSave({departure, destination, station, stationId, notionId, time}) 
+          }
+          catch {
+            return null;
+          } 
+        }}
+        isListening={isRecording}
       />
       <H1>예정된 알림</H1>
       <CardWrapper>
@@ -90,3 +165,11 @@ const Home = () => {
 };
 
 export default Home;
+
+
+const getCurTime = () => {
+  const now = Date.now()
+  const hours = new Date(now).getHours()
+  const minutes = new Date(now).getMinutes()
+  return `${hours}:${minutes}`
+}
