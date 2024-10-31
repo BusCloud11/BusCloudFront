@@ -1,5 +1,90 @@
-import TMapPublicTransport from "../mocks/tmap-public-transport.mock.json";
 import axios from "axios";
+
+export interface Root {
+  metaData: MetaData;
+}
+
+export interface MetaData {
+  plan: Plan;
+}
+
+export interface Plan {
+  itineraries: Itinerary[];
+}
+
+export interface Itinerary {
+  fare: Fare;
+  legs: Leg[];
+  totalDistance: number;
+  totalTime: number;
+  totalWalkDistance: number;
+  totalWalkTime: number;
+  transferCount: number;
+}
+
+export interface Fare {
+  regular: Regular;
+}
+
+export interface Regular {
+  currency: Currency;
+  totalFare: number;
+}
+
+export interface Currency {
+  symbol: string;
+  currency: string;
+  currencyCode: string;
+}
+
+export interface Leg {
+  mode: string;
+  sectionTime: number;
+  distance: number;
+  start: Start;
+  end: End;
+  steps?: Step[];
+  route?: string;
+  routeColor?: string;
+  routeId?: string;
+  passShape?: PassShape;
+  passStopList?: PassStopList;
+}
+
+export interface Start {
+  name: string;
+  lat: number;
+  lon: number;
+}
+
+export interface End {
+  name: string;
+  lat: number;
+  lon: number;
+}
+
+export interface Step {
+  streetName: string;
+  distance: number;
+  description: string;
+  linestring: string;
+}
+
+export interface PassShape {
+  linestring: string;
+}
+
+export interface PassStopList {
+  stationList: StationList[];
+}
+
+export interface StationList {
+  index: number;
+  stationID: string;
+  stationName: string;
+  lat: string;
+  lon: string;
+}
 
 type GeoXYType = {
   x: number; // 경도
@@ -36,7 +121,7 @@ export async function getBusRoute(startXY: GeoXYType, endXY: GeoXYType) {
     }
   );
 
-  const responseData = response.data;
+  const responseData: Root = response.data;
   // const responseData = TMapPublicTransport;
   const itinerariesIncludingBus = responseData.metaData.plan.itineraries.filter(
     (itinerary) => {
