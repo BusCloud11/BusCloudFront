@@ -1,13 +1,14 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+
 import Card from "../components/Card";
-import VoiceInput from "../components/VoiceInput";
-import { useVoiceRecognition } from "../hooks/use-voice-recognition";
 import { GetBusListResponseType } from "../utils/get-bus-list";
+import VoiceInput from "../components/VoiceInput";
+import axios from "axios";
 import { getBusRoute } from "../utils/get-bus-route";
 import { postBusSave } from "../utils/post-bus-save";
+import styled from "styled-components";
 import { transAddressToXY } from "../utils/trans-address-to-xy";
+import { useVoiceRecognition } from "../hooks/use-voice-recognition";
 
 const Container = styled.div`
   display: flex;
@@ -74,89 +75,92 @@ const mockDatas: GetBusListResponseType[] = [
     notionId: 1,
     stationId: 1,
     frequency: 1,
-  }
-]
+  },
+];
 
 type BusInfoType = {
-  infoState: "notFound" | "error" | "normal",
-  routeNumber: string, // 노선 번호
-  predictionTime: number,// 현재 정류장까지 도착 예정 시간 (분)
-  remainStation: number// 현재 정류장까지 남은 정류장 수
-  plateNumber: string // 버스 차량번호 (아래 달려 있는 판넬) 
-}
+  infoState: "notFound" | "error" | "normal";
+  routeNumber: string; // 노선 번호
+  predictionTime: number; // 현재 정류장까지 도착 예정 시간 (분)
+  remainStation: number; // 현재 정류장까지 남은 정류장 수
+  plateNumber: string; // 버스 차량번호 (아래 달려 있는 판넬)
+};
 
 const NOT_FOUND_BUS_INFO: BusInfoType = {
   infoState: "notFound",
   routeNumber: "-1",
   predictionTime: 0,
   remainStation: 0,
-  plateNumber: "-2"
-} as const
+  plateNumber: "-2",
+} as const;
 
 const ERROR_BUS_INFO: BusInfoType = {
   infoState: "error",
   routeNumber: "-2",
   predictionTime: 0,
   remainStation: 0,
-  plateNumber: "-2"
-} as const
-
+  plateNumber: "-2",
+} as const;
 
 const Home = () => {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [stops, setStops] = useState("");
-  const { isRecording,  aiResponse, handleRecording } = useVoiceRecognition();
-  const [busList, setBusList] = useState<GetBusListResponseType[]>([])
-  const [busInfo, setBusInfo] = useState<BusInfoType>(NOT_FOUND_BUS_INFO)
+  const { isRecording, aiResponse, handleRecording } = useVoiceRecognition();
+  const [busList, setBusList] = useState<GetBusListResponseType[]>([]);
+  const [busInfo, setBusInfo] = useState<BusInfoType>(NOT_FOUND_BUS_INFO);
 
-  const getBusss = async () => { 
+  const getBusss = async () => {
     // const data = await getBusList()
-    const data = mockDatas
-    setBusList(data)
-  }
+    const data = mockDatas;
+    setBusList(data);
+  };
 
-  useEffect(() => { 
+  useEffect(() => {
     getBusss();
-  }, [])
+  }, []);
 
-  useEffect(() => { 
-    const timer = setInterval(async () => { 
-      const stationId = busList[0].stationId
-      const routeId = busList[0].notionId
+  useEffect(() => {
+    const timer = setInterval(async () => {
+      const stationId = busList[0].stationId;
+      const routeId = busList[0].notionId;
       try {
-        const response = await axios.get('/api/jeju-bus/api/searchArrivalInfoList.do', {
-          params: {
-            station_id: stationId
+        const response = await axios.get(
+          "/api/jeju-bus/api/searchArrivalInfoList.do",
+          {
+            params: {
+              station_id: stationId,
+            },
           }
-        })
-        const busInfos = response.data
+        );
+        const busInfos = response.data;
         if (busInfos.length === 0) {
-          setBusInfo(NOT_FOUND_BUS_INFO)
-          return
+          setBusInfo(NOT_FOUND_BUS_INFO);
+          return;
         }
-        const targetBusInfos = busInfos.filter((busInfo: BusInfoType) => Number(busInfo.routeNumber) === routeId)
-        targetBusInfos.sort((aBus: BusInfoType, bBus: BusInfoType) => aBus.predictionTime - bBus.predictionTime)
-        const nearestBusInfo = targetBusInfos[0]
-        setBusInfo({ ...nearestBusInfo, type: "normal" })
-      } catch{
-        setBusInfo(ERROR_BUS_INFO)
+        const targetBusInfos = busInfos.filter(
+          (busInfo: BusInfoType) => Number(busInfo.routeNumber) === routeId
+        );
+        targetBusInfos.sort(
+          (aBus: BusInfoType, bBus: BusInfoType) =>
+            aBus.predictionTime - bBus.predictionTime
+        );
+        const nearestBusInfo = targetBusInfos[0];
+        setBusInfo({ ...nearestBusInfo, type: "normal" });
+      } catch {
+        setBusInfo(ERROR_BUS_INFO);
       }
+    }, 10 * 1000);
+    return () => clearInterval(timer);
+  }, [busList]);
 
-    }, 10 * 1000)
-    return () => clearInterval(timer)
-  },[busList])
-  
   useEffect(() => {
     if (!aiResponse) return;
-    setOrigin(aiResponse.departures)
-    setDestination(aiResponse.destinations)
-    setStops(aiResponse.stops.toString())
-    console.log(aiResponse) 
-  }, [aiResponse])
-
-
-
+    setOrigin(aiResponse.departures);
+    setDestination(aiResponse.destinations);
+    setStops(aiResponse.stops.toString());
+    console.log(aiResponse);
+  }, [aiResponse]);
 
   return (
     <Container>
@@ -174,39 +178,45 @@ const Home = () => {
           setStops(e.target.value);
         }}
         onMicClick={() => {
-          handleRecording()
+          handleRecording();
         }}
         onResetClick={() => {
-          setOrigin("")
-          setDestination("")
-          setStops("")
+          setOrigin("");
+          setDestination("");
+          setStops("");
         }}
         onConfirmClick={async () => {
           // 1. 구글 api 호출
-          const startXY = await transAddressToXY(origin)
-          const endXY = await transAddressToXY(destination)
+          const startXY = await transAddressToXY(origin);
+          const endXY = await transAddressToXY(destination);
 
-          console.log(startXY, endXY)
+          console.log(startXY, endXY);
 
           // 2. tmap api 호출
-          const busRoute = await getBusRoute(startXY, endXY)
-          console.log(busRoute)
+          const busRoute = await getBusRoute(startXY, endXY);
+          console.log(busRoute);
 
           if (!busRoute) return null;
 
-          const departure = origin
-          const station = Number(stops)
-          const stationId = busRoute.sStationId
-          const notionId = busRoute.routeNum
-          const time = getCurTime()
+          const departure = origin;
+          const station = Number(stops);
+          const stationId = busRoute.sStationId;
+          const notionId = busRoute.routeNum;
+          const time = getCurTime();
           try {
-            const res = await postBusSave({ departure, destination, station, stationId, notionId, time }) 
-            await getBusss()
+            const res = await postBusSave({
+              departure,
+              destination,
+              station,
+              stationId,
+              notionId,
+              time,
+            });
+            await getBusss();
             return res;
-          }
-          catch {
+          } catch {
             return null;
-          } 
+          }
         }}
         isListening={isRecording}
       />
@@ -215,13 +225,21 @@ const Home = () => {
         {/* {data.slice(2, 0).map((item) => (
           <Card key={item.title} {...item} />
         ))} */}
-        {
-          busList.length > 0 &&
-        <Card title={busList[0].departure} departure={busList[0].departure} destination={busList[0].destination}
-          buses={[{ busNumber: busInfo.plateNumber, color: "#FF0000", stops: busInfo.remainStation }]}
-          isAlertEnabled={busList[0].alarm}
+        {busList.length > 0 && (
+          <Card
+            title={busList[0].departure}
+            departure={busList[0].departure}
+            destination={busList[0].destination}
+            buses={[
+              {
+                busNumber: busInfo.plateNumber,
+                color: "#FF0000",
+                stops: busInfo.remainStation,
+              },
+            ]}
+            isAlertEnabled={busList[0].alarm}
           />
-        }
+        )}
       </CardWrapper>
     </Container>
   );
@@ -229,10 +247,9 @@ const Home = () => {
 
 export default Home;
 
-
 const getCurTime = () => {
-  const now = Date.now()
-  const hours = new Date(now).getHours()
-  const minutes = new Date(now).getMinutes()
-  return `${hours}:${minutes}`
-}
+  const now = Date.now();
+  const hours = new Date(now).getHours();
+  const minutes = new Date(now).getMinutes();
+  return `${hours}:${minutes}`;
+};
