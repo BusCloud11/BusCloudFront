@@ -1,12 +1,13 @@
 import { ChangeEvent, useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import icDropDown from "../assets/icDropDown.svg";
 import Button from "../components/Button";
 import Checkbox from "../components/CheckBox";
+import Logo2 from "../assets/Logo2.svg";
 import TextInput from "../components/TextInput";
+import icDropDown from "../assets/icDropDown.svg";
 import { postMemberLogin } from "../utils/post-member-login";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -17,12 +18,12 @@ const Container = styled.div`
   gap: 32px;
 `;
 
-const Logo = styled.div`
+const Logo = styled.img`
   width: 289px;
   height: 213px;
   margin-top: 65px;
   margin-bottom: 40px;
-  background-color: #353535;
+  /* background-color: #353535; */
 `;
 
 const CheckArea = styled.div`
@@ -48,12 +49,12 @@ const Login = () => {
   const [isCheck1, setIsCheck1] = useState(false);
   const [isCheck2, setIsCheck2] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  useEffect(() => { 
-    const phone = localStorage.getItem('phone')
-    if (phone !== null) navigate('/home');
-  },[navigate])
+  useEffect(() => {
+    const phone = localStorage.getItem("phone");
+    if (phone !== null) navigate("/home");
+  }, [navigate]);
 
   useEffect(() => {
     setBtnDisabled(!isValidPhoneNumber(phone) || !isCheck1 || !isCheck2);
@@ -86,20 +87,20 @@ const Login = () => {
       setError("올바른 전화번호 형식이 아닙니다");
       return;
     }
-    const parsedPhone = phone.replace(/-/g, "")
+    const parsedPhone = phone.replace(/-/g, "");
     try {
-      const token = await postMemberLogin(parsedPhone)
-      localStorage.setItem('accessToken', token)
-      localStorage.setItem('phone', parsedPhone)
-      navigate('/home')
+      const token = await postMemberLogin(parsedPhone);
+      localStorage.setItem("accessToken", token);
+      localStorage.setItem("phone", parsedPhone);
+      navigate("/home");
     } catch {
-      alert("로그인에 실패했습니다.")
+      alert("로그인에 실패했습니다.");
     }
   };
 
   return (
     <Container>
-      <Logo />
+      <Logo src={Logo2} />
       <TextInput
         label="휴대폰 로그인"
         value={phone}
