@@ -34,6 +34,7 @@ const Input = styled.input<{ width: number }>`
 `;
 
 const InputMirror = styled.div`
+  position: absolute;
   visibility: hidden;
   height: 0;
   font-size: ${(props) => props.theme.text.h1bd32.fontSize};
@@ -66,7 +67,7 @@ export const AdjustInput = ({
           onChange={onChange}
           id={placeholder === "성산일출봉" ? "originInput" : ""}
         />
-        {additionalText}
+        <span>{additionalText}</span>
       </div>
       <InputMirror ref={mirrorRef} aria-hidden>
         {value || placeholder}

@@ -13,14 +13,14 @@ const Btn = styled.button<ButtonProps>`
     props.variant === "primary"
       ? "#ffffff"
       : props.variant === "secondary"
-      ? props.theme.colors.orange04
+      ? props.theme.colors.gray50
       : props.theme.colors.gray800};
   background-color: ${(props) =>
     props.variant === "primary"
       ? props.theme.colors.orange03
       : props.variant === "secondary"
-      ? props.theme.colors.orange01
-      : "#ffffff"};
+      ? props.theme.colors.gray800
+      : "props.theme.colors.gray50"};
 
   font-size: ${(props) =>
     props.variant === "primary"
@@ -29,7 +29,8 @@ const Btn = styled.button<ButtonProps>`
       ? "16px"
       : "14px"};
   font-weight: "semibold";
-  border: none;
+  border: ${(props) =>
+    props.variant === "tertiary" ? "1px solid #e0e0e3" : "none"};
   border-radius: 12px;
   display: inline-flex;
   align-items: center;
@@ -41,14 +42,14 @@ const Btn = styled.button<ButtonProps>`
     props.size === "large"
       ? "52px"
       : props.size === "medium"
-      ? "48px"
-      : "40px"};
+      ? "52px"
+      : "52px"};
   width: ${(props) =>
     props.size === "large"
       ? "100%"
       : props.size === "medium"
-      ? "128px"
-      : "114px"};
+      ? "200px"
+      : "98px"};
 
   &:hover {
     background-color: ${(props) =>
@@ -56,7 +57,7 @@ const Btn = styled.button<ButtonProps>`
       (props.variant === "primary"
         ? props.theme.colors.orange04
         : props.variant === "secondary"
-        ? props.theme.colors.orange02
+        ? props.theme.colors.gray900
         : "#f1f1f4")};
   }
 
@@ -66,18 +67,18 @@ const Btn = styled.button<ButtonProps>`
       (props.variant === "primary"
         ? props.theme.colors.orange04
         : props.variant === "secondary"
-        ? props.theme.colors.orange02
+        ? props.theme.colors.gray900
         : "#f1f1f4")};
   }
 `;
 
-const Button: React.FC<ButtonProps> = ({
+const Button = ({
   children,
   size = "medium",
   variant = "primary",
   disabled = false,
   onClick,
-}) => {
+}: ButtonProps) => {
   return (
     <Btn size={size} variant={variant} disabled={disabled} onClick={onClick}>
       {children}
