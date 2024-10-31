@@ -9,13 +9,17 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
   value: string;
   onClear?: () => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  type?: string;
+  placeholder?: string;
 }
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
+  width: 100%;
 `;
 
 const Label = styled.label`
@@ -48,7 +52,7 @@ const InputWrapper = styled.div<{
         ? props.theme.colors.orange03
         : props.theme.colors.gray50};
   background-color: ${(props) =>
-    props.disabled ? props.theme.colors.gray50 : props.theme.colors.gray200};
+    props.disabled ? props.theme.colors.gray50 : props.theme.colors.gray100};
   padding: 12px;
   border-radius: 12px;
   transition: border-color 0.2s;
@@ -59,15 +63,19 @@ const InputWrapper = styled.div<{
 `;
 
 const StyledInput = styled.input<{ disabled?: boolean }>`
-  flex: 1;
-  font-size: 16px;
+  font-size: ${(props) => props.theme.text.b2rg22.fontSize};
+  font-weight: ${(props) => props.theme.text.b2rg22.fontWeight};
   border: none;
   background: transparent;
+  width: 100%;
+  outline: none;
   color: ${(props) =>
     props.disabled ? props.theme.colors.gray200 : props.theme.colors.gray950};
-  outline: none;
+
   &::placeholder {
     color: ${(props) => props.theme.colors.gray600};
+    font-size: ${(props) => props.theme.text.b2rg22.fontSize};
+    font-weight: ${(props) => props.theme.text.b2rg22.fontWeight};
   }
 `;
 
@@ -79,7 +87,6 @@ const ClearButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
   margin-left: 8px;
   border-radius: 50%;
 `;
@@ -90,6 +97,7 @@ const TextInput = ({
   error = false,
   value,
   onClear,
+  onChange,
   disabled = false,
   ...props
 }: InputProps) => {
@@ -105,6 +113,7 @@ const TextInput = ({
           disabled={disabled}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
+          onChange={onChange}
         />
         {value && onClear && !disabled && (
           <ClearButton onClick={onClear} aria-label="Clear input">

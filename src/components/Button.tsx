@@ -5,6 +5,7 @@ interface ButtonProps {
   variant?: "primary" | "secondary" | "tertiary";
   disabled?: boolean;
   children: React.ReactNode;
+  onClick?: () => void;
 }
 
 const Btn = styled.button<ButtonProps>`
@@ -44,7 +45,7 @@ const Btn = styled.button<ButtonProps>`
       : "40px"};
   width: ${(props) =>
     props.size === "large"
-      ? "136px"
+      ? "100%"
       : props.size === "medium"
       ? "128px"
       : "114px"};
@@ -75,9 +76,10 @@ const Button: React.FC<ButtonProps> = ({
   size = "medium",
   variant = "primary",
   disabled = false,
+  onClick,
 }) => {
   return (
-    <Btn size={size} variant={variant} disabled={disabled}>
+    <Btn size={size} variant={variant} disabled={disabled} onClick={onClick}>
       {children}
     </Btn>
   );
