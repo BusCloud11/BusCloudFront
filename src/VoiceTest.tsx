@@ -78,7 +78,7 @@ const VoiceTest = () => {
     const notionId = busRoute?.routeNum.split(":")[1];
     const time = getCurTime();
 
-    const phone = localStorage.getItem("phone");
+    const accessToken = localStorage.getItem("accessToken");
     console.log(departure, destination, station, stationId, notionId, time);
     const response = await axios.post(
       "/api/bus/save",
@@ -92,7 +92,7 @@ const VoiceTest = () => {
       },
       {
         headers: {
-          Authorization: `Bearer ${phone}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
