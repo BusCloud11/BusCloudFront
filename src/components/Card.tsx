@@ -181,9 +181,11 @@ const Card = ({
                   <img src={icBusDisabled} alt="Bus" />
                 )}
 
-                {bus.busNumber}
+                {Number(bus.busNumber) < 0 ? "-" : bus.busNumber}
               </span>
-              <span className="bus-stops">{bus.stops}번째 전</span>
+              <span className="bus-stops">
+                {Number(bus.busNumber) < 0 ? "-" : bus.stops}번째 전
+              </span>
             </div>
           ))}
         </BusInfo>

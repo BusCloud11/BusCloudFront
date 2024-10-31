@@ -1,7 +1,7 @@
+import { GetBusListResponseType, getBusList } from "../utils/get-bus-list";
 import { useEffect, useState } from "react";
 
 import Card from "../components/Card";
-import { GetBusListResponseType } from "../utils/get-bus-list";
 import { postBusAlarm } from "../utils/post-bus-alarm";
 import { postBusFavorite } from "../utils/post-bus-favorite";
 import styled from "styled-components";

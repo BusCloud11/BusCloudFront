@@ -1,7 +1,7 @@
+import { GetBusListResponseType, getBusList } from "../utils/get-bus-list";
 import { useEffect, useState } from "react";
 
 import Card from "../components/Card";
-import { GetBusListResponseType } from "../utils/get-bus-list";
 import VoiceInput from "../components/VoiceInput";
 import axios from "axios";
 import { getBusRoute } from "../utils/get-bus-route";
