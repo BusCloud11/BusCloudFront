@@ -1,15 +1,14 @@
-import { AxiosError } from "axios"
-import axiosInstanceToBack from "../axios-instance"
+import { AxiosError } from "axios";
+import axiosInstanceToBack from "../axios-instance";
 
 export const postMemberLogin = async (phone: string) => {
   try {
-    const response = await axiosInstanceToBack().post('/api/member/login', {
-      phone
-    })
-    return response.data.result.data
+    const response = await axiosInstanceToBack().post("/api/member/login", {
+      phone,
+    });
+    return response.data.result.data.token;
   } catch (e) {
-    if (e instanceof Error || e instanceof AxiosError)
-      throw e
-    else throw new Error("알 수 없는 에러")
+    if (e instanceof Error || e instanceof AxiosError) throw e;
+    else throw new Error("알 수 없는 에러");
   }
-}
+};

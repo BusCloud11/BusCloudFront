@@ -111,8 +111,8 @@ const Home = () => {
   const [busInfo, setBusInfo] = useState<BusInfoType>(NOT_FOUND_BUS_INFO);
 
   const getBusss = async () => {
-    // const data = await getBusList()
-    const data = mockDatas;
+    const data = await getBusList();
+    // const data = mockDatas;
     setBusList(data);
   };
 

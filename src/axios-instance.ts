@@ -16,7 +16,7 @@ const axiosInstanceToBack = (): AxiosInstance => {
       return config;
     },
     (error) => {
-      console.error("요청 에러",error)
+      console.error("요청 에러", error);
       return Promise.reject(error);
     }
   );
@@ -31,15 +31,14 @@ const axiosInstanceToBack = (): AxiosInstance => {
         originalRequest._retry = true;
 
         try {
-          const phone = localStorage.getItem("phone")
+          const phone = localStorage.getItem("phone");
           const request = await instance.post("/api/member/login", { phone });
 
-          if(request.status === 200) 
-            localStorage.setItem("accessToken", request.data.token)
-        
-          originalRequest.headers.Authorization = `Bearer ${request.data.token}`
-          return instance(originalRequest);
+          if (request.status === 200)
+            localStorage.setItem("accessToken", request.data.result.data.token);
 
+          originalRequest.headers.Authorization = `Bearer ${request.data.result.data.token}`;
+          return instance(originalRequest);
         } catch (refreshError) {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("phone");
