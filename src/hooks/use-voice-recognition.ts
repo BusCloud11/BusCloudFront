@@ -14,9 +14,7 @@ interface UseVoiceRecognitionReturn {
   handleRecording: () => void;
 }
 
-const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-console.log(apiKey);
-const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
+const openai = new OpenAI({ dangerouslyAllowBrowser: true });
 
 export const useVoiceRecognition = (): UseVoiceRecognitionReturn => {
   const [isRecording, setIsRecording] = useState(false);
