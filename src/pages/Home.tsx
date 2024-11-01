@@ -112,6 +112,7 @@ const Home = () => {
 
   const getBusss = async () => {
     const data = await getBusList();
+    console.log("getBusss", data);
     // const data = mockDatas;
     setBusList(data);
   };
@@ -124,6 +125,7 @@ const Home = () => {
     const timer = setInterval(async () => {
       const stationId = busList[0].stationId;
       const routeId = busList[0].notionId;
+      console.log(busList);
       try {
         const response = await axios.get(
           "http://bus.jeju.go.kr/api/searchArrivalInfoList.do",
@@ -201,7 +203,7 @@ const Home = () => {
           const departure = origin;
           const station = Number(stops);
           const stationId = busRoute.sStationId;
-          const notionId = busRoute.routeNum;
+          const notionId = busRoute.routeNum.replace(/\D/g, "");
           const time = getCurTime();
           try {
             const res = await postBusSave({
@@ -212,6 +214,7 @@ const Home = () => {
               notionId,
               time,
             });
+            console.log("onConfirmClick", res);
             await getBusss();
             return res;
           } catch {
@@ -261,7 +264,7 @@ export default Home;
 
 const getCurTime = () => {
   const now = Date.now();
-  const hours = new Date(now).getHours();
-  const minutes = new Date(now).getMinutes();
+  const hours = new Date(now).getHours().toString().padStart(2, "0");
+  const minutes = new Date(now).getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 };

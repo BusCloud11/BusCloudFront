@@ -27,36 +27,22 @@ const CardWrapper = styled.div`
   gap: 32px;
 `;
 
-const mockDatas: GetBusListResponseType[] = [
-  {
-    id: 1,
-    departure: "납읍초등학교",
-    destination: "제주 시청",
-    station: 5,
-    time: "12:00 ~ 15:00",
-    alarm: true,
-    favorite: true,
-    notionId: 1,
-    stationId: 1,
-    frequency: 1,
-  },
-];
-
 const Favorite = () => {
   const [busList, setBusList] = useState<GetBusListResponseType[]>([]);
+  const [flag, setFlag] = useState(false);
 
   const getBusss = async () => {
     const data = await getBusList();
-    // const data = mockDatas
     setBusList(data);
   };
+
   useEffect(() => {
     getBusss();
-  }, []);
+  }, [flag]);
 
   return (
     <Container>
-      <H1>즐겨찾는 노선</H1>
+      <H1>즐겨찾는 경로</H1>
       <CardWrapper>
         {busList.map((item) => (
           <Card
@@ -69,9 +55,11 @@ const Favorite = () => {
             isAlertEnabled={item.alarm}
             onToggleAlert={() => {
               postBusAlarm(item.id, !item.alarm);
+              setFlag(!flag);
             }}
             onDeleteAlert={() => {
               postBusFavorite({ id: item.id, favorite: false });
+              setFlag(!flag);
             }}
           />
         ))}
