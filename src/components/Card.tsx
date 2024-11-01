@@ -196,7 +196,7 @@ const Card = ({
           <AlertInfo>
             <div>
               {alertTime.length < 8
-                ? generateTimeRanges(alertTime, 3)
+                ? generateTimeRanges(alertTime, 3)[0]
                 : alertTime}
             </div>
             <span>{alertStop} 정류장 전에 알림을 드립니다.</span>

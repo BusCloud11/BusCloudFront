@@ -29,7 +29,6 @@ const CardWrapper = styled.div`
 
 const Favorite = () => {
   const [busList, setBusList] = useState<GetBusListResponseType[]>([]);
-  const [flag, setFlag] = useState(false);
 
   const getBusss = async () => {
     const data = await getBusList();
@@ -38,7 +37,7 @@ const Favorite = () => {
 
   useEffect(() => {
     getBusss();
-  }, [flag]);
+  }, []);
 
   return (
     <Container>
@@ -53,13 +52,13 @@ const Favorite = () => {
             alertTime={item.time}
             alertStop={item.station}
             isAlertEnabled={item.alarm}
-            onToggleAlert={() => {
-              postBusAlarm(item.id, !item.alarm);
-              setFlag(!flag);
+            onToggleAlert={async () => {
+              await postBusAlarm(item.id, !item.alarm);
+              await getBusss();
             }}
-            onDeleteAlert={() => {
-              postBusFavorite({ id: item.id, favorite: false });
-              setFlag(!flag);
+            onDeleteAlert={async () => {
+              await postBusFavorite({ id: item.id, favorite: false });
+              await getBusss();
             }}
           />
         ))}
