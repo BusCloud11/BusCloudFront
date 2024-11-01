@@ -235,7 +235,7 @@ const Home = () => {
                 busNumber:
                   Number(busInfo.plateNumber) < 0 ? "365" : busInfo.plateNumber,
                 color: "#386DE8",
-                stops: busInfo.remainStation < 0 ? 2 : busInfo.remainStation,
+                stops: busInfo.remainStation <= 0 ? 2 : busInfo.remainStation,
               },
             ]}
             isAlertEnabled={busList[0].alarm}
@@ -251,7 +251,7 @@ const Home = () => {
                 busNumber:
                   Number(busInfo.plateNumber) < 0 ? "370" : busInfo.plateNumber,
                 color: "#386DE8",
-                stops: busInfo.remainStation < 0 ? 6 : busInfo.remainStation,
+                stops: busInfo.remainStation <= 0 ? 6 : busInfo.remainStation,
               },
             ]}
             isAlertEnabled={busList[1].alarm}
