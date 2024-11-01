@@ -1,4 +1,5 @@
 import axios from "axios";
+import mockData from "../mocks/api.json";
 
 export interface Root {
   metaData: MetaData;
@@ -103,26 +104,26 @@ export async function getBusRoute(startXY: GeoXYType, endXY: GeoXYType) {
   const test3 = test1 + test2;
 
   /** 실제 api 호출 */
-  const response = await axios.post(
-    `https://apis.openapi.sk.com/transit/routes`,
-    {
-      startX: startXY.x, // 출발 경로
-      startY: startXY.y, // 출발 위도
-      endX: endXY.x, // 도착 경도
-      endY: endXY.y, // 도착 위도
-      count: 10, // 최대 경로 수
-      format: "json", // 반환 포멧
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        appKey: test3,
-      },
-    }
-  );
+  // const response = await axios.post(
+  //   `https://apis.openapi.sk.com/transit/routes`,
+  //   {
+  //     startX: startXY.x, // 출발 경로
+  //     startY: startXY.y, // 출발 위도
+  //     endX: endXY.x, // 도착 경도
+  //     endY: endXY.y, // 도착 위도
+  //     count: 10, // 최대 경로 수
+  //     format: "json", // 반환 포멧
+  //   },
+  //   {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       appKey: test3,
+  //     },
+  //   }
+  // );
 
-  const responseData: Root = response.data;
-  // const responseData = TMapPublicTransport;
+  // const responseData: Root = response.data;
+  const responseData: Root = mockData;
   const itinerariesIncludingBus = responseData.metaData.plan.itineraries.filter(
     (itinerary) => {
       return itinerary.legs.filter((leg) => leg.mode === "BUS").length > 0;

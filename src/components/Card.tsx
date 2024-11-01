@@ -194,7 +194,11 @@ const Card = ({
       {alertTime && alertStop && (
         <AlertArea>
           <AlertInfo>
-            <div>{alertTime}</div>
+            <div>
+              {alertTime.length < 8
+                ? generateTimeRanges(alertTime, 3)
+                : alertTime}
+            </div>
             <span>{alertStop} 정류장 전에 알림을 드립니다.</span>
           </AlertInfo>
           <Switch selected={isAlertEnabled} onToggle={onToggleAlert!} />
@@ -205,3 +209,41 @@ const Card = ({
 };
 
 export default Card;
+
+function generateTimeRanges(startTime: string, interval: number) {
+  const ranges = [];
+
+  // 시작 시간을 시와 분으로 분리
+  const [startHour, startMinute] = startTime.split(":").map(Number);
+
+  // 현재 시간을 분 단위로 계산
+  let currentTime = startHour * 60 + startMinute;
+
+  // 하루는 1440분
+  const DAY_MINUTES = 24 * 60;
+
+  while (currentTime < DAY_MINUTES) {
+    // 종료 시간을 계산
+    let endTime = currentTime + interval * 60;
+
+    // 종료 시간이 하루를 초과하지 않도록 조정
+    if (endTime > DAY_MINUTES) {
+      endTime = DAY_MINUTES;
+    }
+
+    // 현재 시간과 종료 시간을 "HH:MM" 형식으로 변환
+    const formatTime = (minutes: number) => {
+      const hrs = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      return `${String(hrs).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+    };
+
+    const range = `${formatTime(currentTime)} ~ ${formatTime(endTime)}`;
+    ranges.push(range);
+
+    // 다음 시작 시간을 설정
+    currentTime = endTime;
+  }
+
+  return ranges;
+}
