@@ -200,7 +200,7 @@ export const VoiceInput = ({
 
   const onConfirm = async () => {
     const res = await onConfirmClick();
-    if (!response) {
+    if (!res) {
       setStatus("error");
     } else {
       setResponse(res);
