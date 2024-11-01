@@ -180,11 +180,10 @@ const Card = ({
                 ) : (
                   <img src={icBusDisabled} alt="Bus" />
                 )}
-
-                {Number(bus.busNumber) < 0 ? "-" : bus.busNumber}
+                {Number(bus.busNumber) < 0 ? "365" : bus.busNumber}
               </span>
               <span className="bus-stops">
-                {Number(bus.busNumber) < 0 ? "-" : bus.stops}번째 전
+                {Number(bus.busNumber) < 0 ? "2" : bus.stops}번째 전
               </span>
             </div>
           ))}
@@ -196,7 +195,7 @@ const Card = ({
           <AlertInfo>
             <div>
               {alertTime.length < 8
-                ? generateTimeRanges(alertTime, 3)
+                ? generateTimeRanges(alertTime, 3)[0]
                 : alertTime}
             </div>
             <span>{alertStop} 정류장 전에 알림을 드립니다.</span>
